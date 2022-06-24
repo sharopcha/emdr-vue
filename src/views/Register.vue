@@ -200,31 +200,47 @@
         repeatPassword: '',
         country: '',
         postalCode: '',
+        gender: '',
       };
     },
     methods: {
       submitForm() {
         const body = {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          birthday: this.birthday,
+          firstname: this.firstName,
+          lastname: this.lastName,
+          dateofbirth: this.birthday,
           email: this.email,
           password: this.password,
-          phoneNumber: this.phoneNumber,
-          repeatPassword: this.repeatPassword,
+          phonenumber: this.phoneNumber,
+          repeat_password: this.repeatPassword,
           country: this.country,
-          postalCode: this.postalCode,
+          postalcode: this.postalCode,
+          gender: this.gender,
         };
 
-        axios
-          .post('https://emdr-back-end.herokuapp.com/register', body, {
-            headers: { 'Content-Type': 'application/json' },
-          })
-          .then((res) => {
-            console.log(res);
-          });
+        try {
+          axios
+            .post('https://emdr-back-end.herokuapp.com/register', body, {
+              headers: { 'Content-Type': 'application/json' },
+            })
+            .then((res) => {
+              console.log(res);
+            });
 
-        console.log(body);
+          this.firstName = '';
+          this.lastName = '';
+          this.birthday = '';
+          this.email = '';
+          this.password = '';
+          this.phoneNumber = '';
+          this.repeatPassword = '';
+          this.postalCode = '';
+          this.gender = '';
+
+          this.$router.push('/login');
+        } catch (error) {
+          console.log(error, body);
+        }
       },
     },
   };
