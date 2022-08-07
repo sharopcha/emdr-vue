@@ -8,13 +8,14 @@
           alt="EMDR therapy logo"
         />
 
-        <form class="form-body" autocomplete="new-password">
+        <form @submit.prevent="submitForm()" class="form-body">
           <div class="upper-login">
             <p style="color: white">Please enter your Email Address:</p>
             <div class="inp">
               <input
                 type="text"
                 name="email"
+                v-model="email"
                 placeholder="email@email.com"
                 id="username"
                 required
@@ -23,8 +24,8 @@
           </div>
 
           <div class="lower-login">
-            <!-- <div class="success" *ngIf="successMsg">{{successMsg}}</div>
-          <div class="login-error" *ngIf="resetError">{{resetError}}</div> -->
+            <div class="success" v-if="successMsg">{{ successMsg }}</div>
+            <div class="login-error" v-if="resetError">{{ resetError }}</div>
 
             <button id="Connect" type="submit">Continue</button>
           </div>
@@ -37,17 +38,48 @@
 </template>
 
 <script>
+  import axios from 'axios';
   export default {
     name: 'CheckEmail',
+    data() {
+      return {
+        email: '',
+        successMsg: null,
+        errorMsg: null,
+        resetError: null,
+        isError: false,
+      };
+    },
+    methods: {
+      submitForm() {
+        this.resetError = null;
+        const headers = { 'Content-Type': 'application/json' };
+
+        axios
+          .post(
+            'https://emdr-back-end.herokuapp.com/ForgotPassword',
+            { eamil: this.email },
+            { headers }
+          )
+          .then((res) => {
+            this.successMsg =
+              'Password reset link has been sent successfully. Please check your inbox!';
+          })
+          .catch((err) => {
+            console.log(err.message);
+            this.resetError = err.message;
+          });
+      },
+    },
   };
 </script>
 
-<style>
+<style scoped>
   .login-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 100vh;
   }
 
   .login-box {
