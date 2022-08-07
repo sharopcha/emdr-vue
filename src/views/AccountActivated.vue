@@ -8,12 +8,30 @@
 </template>
 
 <script>
+  import axios from 'axios';
   export default {
     name: 'AccountActivated',
     data() {
       return {
         msg: 'Validating your Data...',
       };
+    },
+    created() {
+      const token = this.$route.params?.token;
+
+      const headers = { 'Content-Type': 'application/json' };
+
+      axios
+        .post(`https://emdr-back-end.herokuapp.com/ActivateAccount/${token}`, {
+          headers,
+        })
+        .then((res) => {
+          this.msg = 'Account activated successfully!';
+        })
+        .catch((err) => {
+          console.log(err);
+          this.msg = 'Something went wrong!';
+        });
     },
   };
 </script>
